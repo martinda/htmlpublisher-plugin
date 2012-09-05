@@ -40,6 +40,7 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import hudson.util.FormValidation;
+import hudson.util.ListBoxModel;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -58,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Saves HTML reports for the project and publishes them.
@@ -252,13 +254,13 @@ public class HtmlPublisher extends Recorder {
                         // The build probably didn't even get to the point where it produces coverage.
                         listener.error("This is especially strange since your build otherwise succeeded.");
                     }
-                    build.setResult(Result.FAILURE);
+                    build.setResult(reportTarget.getResult());
                     return true;
                 }
             } catch (IOException e) {
                 Util.displayIOException(e, listener);
                 e.printStackTrace(listener.fatalError("HTML Publisher failure"));
-                build.setResult(Result.FAILURE);
+                build.setResult(reportTarget.getResult());
                 return true;
             }
     
@@ -305,6 +307,8 @@ public class HtmlPublisher extends Recorder {
         @Override
         public String getDisplayName() {
             // return Messages.JavadocArchiver_DisplayName();
+            Logger logger = Logger.getLogger("Foo");
+            logger.info("Test Foo");
             return "Publish HTML reports";
         }
 
@@ -321,9 +325,37 @@ public class HtmlPublisher extends Recorder {
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
             return true;
         }
+
+        public ListBoxModel doFillResultItems() {
+            System.out.println("Test 2a");
+            Logger logger = Logger.getLogger("Foo");
+            logger.info("Test 2b");
+            ListBoxModel m = new ListBoxModel();
+            m.add(Result.FAILURE.toString());
+            m.add(Result.NOT_BUILT.toString());
+            m.add(Result.SUCCESS.toString());
+            m.add(Result.UNSTABLE.toString());
+            m.add(Result.ABORTED.toString());
+            m.get(0).selected = true;
+            return m;
+          }
     }
 
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.NONE;
     }
+    
+    public ListBoxModel doFillResultItems() {
+        System.out.println("Test 3a");
+        Logger logger = Logger.getLogger("Foo");
+        logger.info("Test 3b");
+        ListBoxModel m = new ListBoxModel();
+        m.add(Result.FAILURE.toString());
+        m.add(Result.NOT_BUILT.toString());
+        m.add(Result.SUCCESS.toString());
+        m.add(Result.UNSTABLE.toString());
+        m.add(Result.ABORTED.toString());
+        m.get(0).selected = true;
+        return m;
+      }
 }

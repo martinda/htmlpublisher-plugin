@@ -45,9 +45,15 @@
         <td>
           <f:checkbox field="keepAll" />
         </td>
-        
         <td>
           <f:repeatableDeleteButton/>
+        </td>
+        </tr>
+        <tr>
+        <td>
+          <f:entry name="result" field="result" default="FAILURE" title="In case of problems with this report, set the build result to:">
+            <select />
+          </f:entry>
         </td>
       </tr>
       </table>

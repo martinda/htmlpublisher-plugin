@@ -8,13 +8,16 @@ import hudson.model.AbstractDescribableImpl;
 import hudson.model.Action;
 import hudson.model.DirectoryBrowserSupport;
 import hudson.model.ProminentProjectAction;
+import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.Descriptor;
+import hudson.util.ListBoxModel;
 import hudson.Extension;
 
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 
@@ -50,16 +53,21 @@ public class HtmlPublisherTarget extends AbstractDescribableImpl<HtmlPublisherTa
     private final boolean keepAll;
 
     /**
+     * The result of the build if this plugin encounters a failure (e.g. a missing report)
+     */
+    private String result = Result.FAILURE.toString();
+    /**
      * The name of the file which will be used as the wrapper index.
      */
     private final String wrapperName = "htmlpublisher-wrapper.html";
 
     @DataBoundConstructor
-    public HtmlPublisherTarget(String reportName, String reportDir, String reportFiles, boolean keepAll) {
+    public HtmlPublisherTarget(String reportName, String reportDir, String reportFiles, boolean keepAll, String result) {
         this.reportName = reportName;
         this.reportDir = reportDir;
         this.reportFiles = reportFiles;
         this.keepAll = keepAll;
+        this.result = result;
     }
 
     public String getReportName() {
@@ -77,6 +85,10 @@ public class HtmlPublisherTarget extends AbstractDescribableImpl<HtmlPublisherTa
     public boolean getKeepAll() {
         return this.keepAll;
     }
+    
+    public Result getResult() {
+    	return Result.fromString(this.result);
+    }
 
     public String getSanitizedName() {
         String safeName = this.reportName;
@@ -87,6 +99,20 @@ public class HtmlPublisherTarget extends AbstractDescribableImpl<HtmlPublisherTa
     public String getWrapperName() {
         return this.wrapperName;
     }
+    
+    public ListBoxModel doFillResultItems() {
+        System.out.println("Test 1a");
+        Logger logger = Logger.getLogger("Foo");
+        logger.info("Test 1b");
+        ListBoxModel m = new ListBoxModel();
+        m.add(Result.FAILURE.toString());
+        m.add(Result.NOT_BUILT.toString());
+        m.add(Result.SUCCESS.toString());
+        m.add(Result.UNSTABLE.toString());
+        m.add(Result.ABORTED.toString());
+        m.get(0).selected = true;
+        return m;
+      }
 
     public FilePath getArchiveTarget(AbstractBuild build) {
         return new FilePath(this.keepAll ? getBuildArchiveDir(build) : getProjectArchiveDir(build.getProject()));
@@ -137,6 +163,20 @@ public class HtmlPublisherTarget extends AbstractDescribableImpl<HtmlPublisherTa
         protected abstract String getTitle();
 
         protected abstract File dir();
+        
+        public ListBoxModel doFillResultItems() {
+            System.out.println("Test 1a");
+            Logger logger = Logger.getLogger("Foo");
+            logger.info("Test 1b");
+            ListBoxModel m = new ListBoxModel();
+            m.add(Result.FAILURE.toString());
+            m.add(Result.NOT_BUILT.toString());
+            m.add(Result.SUCCESS.toString());
+            m.add(Result.UNSTABLE.toString());
+            m.add(Result.ABORTED.toString());
+            m.get(0).selected = true;
+            return m;
+          }
     }
 
     public class HTMLAction extends BaseHTMLAction implements ProminentProjectAction {
@@ -169,6 +209,20 @@ public class HtmlPublisherTarget extends AbstractDescribableImpl<HtmlPublisherTa
         protected String getTitle() {
             return this.project.getDisplayName() + " html2";
         }
+        
+        public ListBoxModel doFillResultItems() {
+            System.out.println("Test 1a");
+            Logger logger = Logger.getLogger("Foo");
+            logger.info("Test 1b");
+            ListBoxModel m = new ListBoxModel();
+            m.add(Result.FAILURE.toString());
+            m.add(Result.NOT_BUILT.toString());
+            m.add(Result.SUCCESS.toString());
+            m.add(Result.UNSTABLE.toString());
+            m.add(Result.ABORTED.toString());
+            m.get(0).selected = true;
+            return m;
+          }
     }
 
     public class HTMLBuildAction extends BaseHTMLAction {
@@ -188,6 +242,20 @@ public class HtmlPublisherTarget extends AbstractDescribableImpl<HtmlPublisherTa
         protected File dir() {
             return getBuildArchiveDir(this.build);
         }
+        
+        public ListBoxModel doFillResultItems() {
+            System.out.println("Test 1a");
+            Logger logger = Logger.getLogger("Foo");
+            logger.info("Test 1b");
+            ListBoxModel m = new ListBoxModel();
+            m.add(Result.FAILURE.toString());
+            m.add(Result.NOT_BUILT.toString());
+            m.add(Result.SUCCESS.toString());
+            m.add(Result.UNSTABLE.toString());
+            m.add(Result.ABORTED.toString());
+            m.get(0).selected = true;
+            return m;
+          }
     }
 
     public void handleAction(AbstractBuild<?, ?> build) {
@@ -204,5 +272,20 @@ public class HtmlPublisherTarget extends AbstractDescribableImpl<HtmlPublisherTa
     @Extension
     public static class DescriptorImpl extends Descriptor<HtmlPublisherTarget> {
         public String getDisplayName() { return ""; }
+        
+        
+        public ListBoxModel doFillResultItems() {
+            System.out.println("Test 1a");
+            Logger logger = Logger.getLogger("Foo");
+            logger.info("Test 1b");
+            ListBoxModel m = new ListBoxModel();
+            m.add(Result.FAILURE.toString());
+            m.add(Result.NOT_BUILT.toString());
+            m.add(Result.SUCCESS.toString());
+            m.add(Result.UNSTABLE.toString());
+            m.add(Result.ABORTED.toString());
+            m.get(0).selected = true;
+            return m;
+          }
     }
 }
