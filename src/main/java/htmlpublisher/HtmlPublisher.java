@@ -40,7 +40,6 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import hudson.util.FormValidation;
-import hudson.util.ListBoxModel;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -308,7 +307,7 @@ public class HtmlPublisher extends Recorder {
         public String getDisplayName() {
             // return Messages.JavadocArchiver_DisplayName();
             Logger logger = Logger.getLogger("Foo");
-            logger.info("Test Foo");
+            logger.info("Test Foo 1");
             return "Publish HTML reports";
         }
 
@@ -326,36 +325,9 @@ public class HtmlPublisher extends Recorder {
             return true;
         }
 
-        public ListBoxModel doFillResultItems() {
-            System.out.println("Test 2a");
-            Logger logger = Logger.getLogger("Foo");
-            logger.info("Test 2b");
-            ListBoxModel m = new ListBoxModel();
-            m.add(Result.FAILURE.toString());
-            m.add(Result.NOT_BUILT.toString());
-            m.add(Result.SUCCESS.toString());
-            m.add(Result.UNSTABLE.toString());
-            m.add(Result.ABORTED.toString());
-            m.get(0).selected = true;
-            return m;
-          }
     }
 
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.NONE;
     }
-    
-    public ListBoxModel doFillResultItems() {
-        System.out.println("Test 3a");
-        Logger logger = Logger.getLogger("Foo");
-        logger.info("Test 3b");
-        ListBoxModel m = new ListBoxModel();
-        m.add(Result.FAILURE.toString());
-        m.add(Result.NOT_BUILT.toString());
-        m.add(Result.SUCCESS.toString());
-        m.add(Result.UNSTABLE.toString());
-        m.add(Result.ABORTED.toString());
-        m.get(0).selected = true;
-        return m;
-      }
 }

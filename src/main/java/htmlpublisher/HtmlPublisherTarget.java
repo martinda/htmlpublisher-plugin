@@ -13,6 +13,8 @@ import hudson.model.Run;
 import hudson.model.Descriptor;
 import hudson.util.ListBoxModel;
 import hudson.Extension;
+import hudson.model.AutoCompletionCandidates;
+import org.kohsuke.stapler.QueryParameter;
 
 
 import java.io.File;
@@ -100,20 +102,6 @@ public class HtmlPublisherTarget extends AbstractDescribableImpl<HtmlPublisherTa
         return this.wrapperName;
     }
     
-    public ListBoxModel doFillResultItems() {
-        System.out.println("Test 1a");
-        Logger logger = Logger.getLogger("Foo");
-        logger.info("Test 1b");
-        ListBoxModel m = new ListBoxModel();
-        m.add(Result.FAILURE.toString());
-        m.add(Result.NOT_BUILT.toString());
-        m.add(Result.SUCCESS.toString());
-        m.add(Result.UNSTABLE.toString());
-        m.add(Result.ABORTED.toString());
-        m.get(0).selected = true;
-        return m;
-      }
-
     public FilePath getArchiveTarget(AbstractBuild build) {
         return new FilePath(this.keepAll ? getBuildArchiveDir(build) : getProjectArchiveDir(build.getProject()));
     }
@@ -164,19 +152,6 @@ public class HtmlPublisherTarget extends AbstractDescribableImpl<HtmlPublisherTa
 
         protected abstract File dir();
         
-        public ListBoxModel doFillResultItems() {
-            System.out.println("Test 1a");
-            Logger logger = Logger.getLogger("Foo");
-            logger.info("Test 1b");
-            ListBoxModel m = new ListBoxModel();
-            m.add(Result.FAILURE.toString());
-            m.add(Result.NOT_BUILT.toString());
-            m.add(Result.SUCCESS.toString());
-            m.add(Result.UNSTABLE.toString());
-            m.add(Result.ABORTED.toString());
-            m.get(0).selected = true;
-            return m;
-          }
     }
 
     public class HTMLAction extends BaseHTMLAction implements ProminentProjectAction {
@@ -210,19 +185,6 @@ public class HtmlPublisherTarget extends AbstractDescribableImpl<HtmlPublisherTa
             return this.project.getDisplayName() + " html2";
         }
         
-        public ListBoxModel doFillResultItems() {
-            System.out.println("Test 1a");
-            Logger logger = Logger.getLogger("Foo");
-            logger.info("Test 1b");
-            ListBoxModel m = new ListBoxModel();
-            m.add(Result.FAILURE.toString());
-            m.add(Result.NOT_BUILT.toString());
-            m.add(Result.SUCCESS.toString());
-            m.add(Result.UNSTABLE.toString());
-            m.add(Result.ABORTED.toString());
-            m.get(0).selected = true;
-            return m;
-          }
     }
 
     public class HTMLBuildAction extends BaseHTMLAction {
@@ -242,20 +204,7 @@ public class HtmlPublisherTarget extends AbstractDescribableImpl<HtmlPublisherTa
         protected File dir() {
             return getBuildArchiveDir(this.build);
         }
-        
-        public ListBoxModel doFillResultItems() {
-            System.out.println("Test 1a");
-            Logger logger = Logger.getLogger("Foo");
-            logger.info("Test 1b");
-            ListBoxModel m = new ListBoxModel();
-            m.add(Result.FAILURE.toString());
-            m.add(Result.NOT_BUILT.toString());
-            m.add(Result.SUCCESS.toString());
-            m.add(Result.UNSTABLE.toString());
-            m.add(Result.ABORTED.toString());
-            m.get(0).selected = true;
-            return m;
-          }
+
     }
 
     public void handleAction(AbstractBuild<?, ?> build) {
@@ -272,20 +221,36 @@ public class HtmlPublisherTarget extends AbstractDescribableImpl<HtmlPublisherTa
     @Extension
     public static class DescriptorImpl extends Descriptor<HtmlPublisherTarget> {
         public String getDisplayName() { return ""; }
-        
-        
+
+        public AutoCompletionCandidates doAutoCompleteState(@QueryParameter String value) {
+          System.out.println("Test 1a");
+          Logger logger = Logger.getLogger("");
+          logger.info("Test 1b");
+          AutoCompletionCandidates c = new AutoCompletionCandidates();
+          for (String state : STATES)
+              if (state.toLowerCase().startsWith(value.toLowerCase()))
+                  c.add(state);
+          return c;
+        }
+
         public ListBoxModel doFillResultItems() {
-            System.out.println("Test 1a");
-            Logger logger = Logger.getLogger("Foo");
-            logger.info("Test 1b");
+            System.out.println("Test 1c");
+            Logger logger = Logger.getLogger("");
+            logger.info("Test 1d");
             ListBoxModel m = new ListBoxModel();
-            m.add(Result.FAILURE.toString());
-            m.add(Result.NOT_BUILT.toString());
-            m.add(Result.SUCCESS.toString());
-            m.add(Result.UNSTABLE.toString());
-            m.add(Result.ABORTED.toString());
-            m.get(0).selected = true;
+            m.add("FAILURE"); //Result.FAILURE.toString());
+            m.add("NOT_BUILT"); //Result.NOT_BUILT.toString());
+            //m.add(Result.SUCCESS.toString());
+            //m.add(Result.UNSTABLE.toString());
+            //m.add(Result.ABORTED.toString());
+            //m.get(0).selected = true;
             return m;
           }
     }
+    private static final String[] STATES = new String[]{
+            "Alabama",
+            "Alaska",
+            "Arizona",
+    };
+
 }

@@ -51,7 +51,10 @@
         </tr>
         <tr>
         <td>
-          <f:entry name="result" field="result" default="FAILURE" title="In case of problems with this report, set the build result to:">
+          <f:entry field="state" title="State starting with A">
+            <f:textbox />
+          </f:entry>
+          <f:entry field="result" title="In case of problems with this report, set the build result to:">
             <select />
           </f:entry>
         </td>
